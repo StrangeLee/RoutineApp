@@ -34,7 +34,7 @@ class _ShowRoutinesState extends State<ShowRoutines> {
                     icon: Icon(
                         Icons.add_circle_outline
                     ),
-                    // TODO : onPressed 함수 추가 및 새 페이지 만들기
+                    // TODO : onPressed 함수 추가 및 add_routines.dart 만들기
                     onPressed: null,
                   )
                 ],
@@ -95,6 +95,9 @@ class _ShowRoutinesState extends State<ShowRoutines> {
                   padding: EdgeInsets.fromLTRB(20, 0, 0, 10),
                   child: Row(
                     children: <Widget>[
+                      Icon(
+                        Icons.access_alarm
+                      ),
                       Text(
                         '$time - ',
                         style: TextStyle(
@@ -117,7 +120,7 @@ class _ShowRoutinesState extends State<ShowRoutines> {
               icon: Icon(
                   Icons.arrow_forward_ios
               ),
-              // TODO : onPressed 함수 추가 및 새 페이지 만들기
+              // TODO : onPressed 함수 추가 및 show_detail_routines 만들기
               onPressed: null,
               alignment: Alignment.centerRight,
             )
