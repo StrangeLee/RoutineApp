@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:routineapp/add_routines.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class ShowRoutines extends StatefulWidget {
   @override
@@ -34,24 +36,41 @@ class _ShowRoutinesState extends State<ShowRoutines> {
                     icon: Icon(
                         Icons.add_circle_outline
                     ),
-                    // TODO : onPressed 함수 추가 및 add_routines.dart 만들기
-                    onPressed: null,
+                    onPressed: () => {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => AddPage()
+                      ))
+                    },
                   )
                 ],
               ),
               Container(
                 alignment: Alignment.centerLeft,
                 padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                child: Text(
-                  '오늘 하루는 어땠나요?',
-                  style: TextStyle(
+                child: TyperAnimatedTextKit(
+                  text: [
+                    '오늘 하루는 어땠나요?'
+                  ],
+                  textStyle: TextStyle(
                     fontSize: 25.0,
                     fontFamily: 'LemonMilkMedium',
                     fontWeight: FontWeight.bold,
                   ),
-                ),
+                  textAlign: TextAlign.start,
+                  alignment: AlignmentDirectional.topStart,
+                  isRepeatingAnimation: false,
+                  speed: new Duration(
+                    milliseconds: 200,
+                  ),
+                )
               ),
-              // TODO : Bottom Line 추가
+              Divider(
+                height: 5.0, // 위 아래 합친 60
+                color: Colors.grey[850],
+                thickness: 0.5,
+                endIndent: 10.0,
+                indent: 10.0,
+              ),
               Padding(
                   padding: EdgeInsets.fromLTRB(0, 20, 0, 0)
               ),
@@ -101,14 +120,16 @@ class _ShowRoutinesState extends State<ShowRoutines> {
                       Text(
                         '$time - ',
                         style: TextStyle(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.bold
+                          fontSize: 15.0, 
+                          fontWeight: FontWeight.bold, 
+                          fontFamily: 'LemonMilkLight',
                         ),
                       ),
                       Text(
                         days,
                         style: TextStyle(
                             fontSize: 13.0,
+                            fontFamily: 'LemonMilkLight', 
                         ),
                       ),
                     ],

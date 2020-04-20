@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: '(MR)Make your Routine',
       theme: ThemeData(
-        primarySwatch: Colors.lime,
+        primarySwatch: Colors.grey,
       ),
       home: SplashScreen()
     );
