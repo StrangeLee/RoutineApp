@@ -5,12 +5,13 @@ import 'package:routineapp/add_routines.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
 class ShowRoutines extends StatefulWidget {
+  // state 추가
+
   @override
   _ShowRoutinesState createState() => _ShowRoutinesState();
 }
 
 class _ShowRoutinesState extends State<ShowRoutines> {
-
   var now = new DateTime.now();
 
   @override
