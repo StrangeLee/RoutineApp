@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:routineapp/add_routines.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:routineapp/show_detail_routines.dart';
 
 class ShowRoutines extends StatefulWidget {
   // TODO : 생성자 추가
@@ -173,8 +174,15 @@ class _ShowRoutinesState extends State<ShowRoutines> {
               icon: Icon(
                   Icons.arrow_forward_ios
               ),
-              // TODO : onPressed 함수 추가 및 show_detail_routines 만들기
-              onPressed: null,
+              onPressed: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => DetailRoutine(
+                    title: title,
+                    alarmTime: time,
+                    dayList: days,
+                  )
+                ));
+              },
               alignment: Alignment.centerRight,
             )
           ],
