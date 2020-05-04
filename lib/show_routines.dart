@@ -5,17 +5,48 @@ import 'package:routineapp/add_routines.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
 class ShowRoutines extends StatefulWidget {
-  // state 추가
+  // TODO : 생성자 추가
+  String routineName;
+  bool setAlarm;
+  String alarmTime;
+  List<bool> dayList;
+
+  ShowRoutines({
+    Key key,
+    @required this.routineName,
+    @required this.setAlarm,
+    @required this.alarmTime,
+    @required this.dayList
+  }) : super(key : key);
 
   @override
-  _ShowRoutinesState createState() => _ShowRoutinesState();
+  _ShowRoutinesState createState() => _ShowRoutinesState(routineName, setAlarm, alarmTime, dayList);
 }
 
 class _ShowRoutinesState extends State<ShowRoutines> {
   var now = new DateTime.now();
 
+  String routineName;
+  bool setAlarm;
+  String alarmTime;
+  List<bool> dayList;
+
+  _ShowRoutinesState(this.routineName, this.setAlarm, this.alarmTime, this.dayList);
+
   @override
   Widget build(BuildContext context) {
+
+    if (routineName != null) {
+      String days = '';
+      for (int i = 0; i < dayList.length; i++) {
+        if (dayList[i] == true) {
+          days += getDay(i) + ' ';
+        }
+        days.trim();
+      }
+      debugPrint('name = $routineName, Alarm is $setAlarm on $alarmTime every ');
+    }
+
     return Scaffold(
       body: SafeArea(
           child: Column(
@@ -150,6 +181,34 @@ class _ShowRoutinesState extends State<ShowRoutines> {
         ),
       ),
     );
+  }
+
+  String getDay(int number) {
+    switch (number) {
+      case 0 :
+        return 'SunDay';
+        break;
+      case 1 :
+        return 'MonDay';
+        break;
+      case 2 :
+        return 'TuesDay';
+        break;
+      case 3 :
+        return 'WendsDay';
+        break;
+      case 4 :
+        return 'ThursDay';
+        break;
+      case 5 :
+        return 'FriDay';
+        break;
+      case 6 :
+        return 'SaturDay';
+        break;
+      default :
+        return 'error';
+    }
   }
 
 }

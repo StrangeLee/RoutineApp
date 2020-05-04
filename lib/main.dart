@@ -9,9 +9,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: '(MR)Make your Routine',
-      theme: ThemeData(
-        primarySwatch: Colors.grey,
-      ),
       home: SplashScreen()
     );
   }

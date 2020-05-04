@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class DayButton extends StatefulWidget {
-  String day;
+  final String day;
   DayButton({Key key, @required this.day}) : super(key : key);
 
   @override
@@ -11,6 +11,7 @@ class DayButton extends StatefulWidget {
 class _DayButtonState extends State<DayButton> {
   bool clicked = true; // if false : not clicked, true : clicked
   String day;
+
   _DayButtonState(this.day);
 
   @override
