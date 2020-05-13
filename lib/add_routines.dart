@@ -23,11 +23,12 @@ class _AddPageState extends State<AddPage> {
 
   Future<Null> selectTime(BuildContext context) async {
     _picked = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
+      context: context,
+      initialTime: TimeOfDay.now(),
     );
 
-    final MaterialLocalizations localizations = MaterialLocalizations.of(context);
+    final MaterialLocalizations localizations =
+        MaterialLocalizations.of(context);
 
     setState(() {
       if (_picked != null) {
@@ -176,9 +177,9 @@ class _AddPageState extends State<AddPage> {
                         height: 45.0,
                         child: RaisedButton(
                           onPressed: () {
-                            Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                builder: (context) => ShowRoutines()
-                            ));
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => ShowRoutines()));
                           },
                           elevation: 5.0,
                           color: Colors.white,
@@ -210,6 +211,28 @@ class _AddPageState extends State<AddPage> {
                   ),
                 ],
               ))),
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.arrow_back,
+            ),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.assessment,
+            ),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.person,
+            ),
+          )
+        ],
+        onTap: (index) {
+
+        },
+      ),
     );
   }
 
@@ -274,9 +297,7 @@ class _AddPageState extends State<AddPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('알림'),
-          content: Text(
-            '이 설정대로 루틴을 만들겠습니까?'
-          ),
+          content: Text('이 설정대로 루틴을 만들겠습니까?'),
           actions: <Widget>[
             FlatButton(
               child: Text('취소'),

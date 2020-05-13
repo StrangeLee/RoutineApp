@@ -48,8 +48,41 @@ class _ShowRoutinesState extends State<ShowRoutines> {
       debugPrint('name = $routineName, Alarm is $setAlarm on $alarmTime every ');
     }
 
-    return Scaffold(
-      body: SafeArea(
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        bottomNavigationBar: BottomNavigationBar(
+            showUnselectedLabels: false,
+            showSelectedLabels: false,
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.arrow_back,
+                ),
+                title: Text(
+                    'back'
+                ),
+              ),
+              BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.assessment,
+                  ),
+                  title: Text(
+                      'stat'
+                  )
+              ),
+              BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.person,
+                  ),
+                  title: Text(
+                      'setting'
+                  )
+              )
+            ],
+            onTap: null
+        ),
+        body: SafeArea(
           child: Column(
             children: <Widget>[
               Row(
@@ -71,31 +104,31 @@ class _ShowRoutinesState extends State<ShowRoutines> {
                     ),
                     onPressed: () => {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => AddPage()
+                          builder: (context) => AddPage()
                       ))
                     },
                   )
                 ],
               ),
               Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                child: TyperAnimatedTextKit(
-                  text: [
-                    '오늘 하루는 어땠나요?'
-                  ],
-                  textStyle: TextStyle(
-                    fontSize: 25.0,
-                    fontFamily: 'LemonMilkMedium',
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.start,
-                  alignment: AlignmentDirectional.topStart,
-                  isRepeatingAnimation: false,
-                  speed: new Duration(
-                    milliseconds: 200,
-                  ),
-                )
+                  alignment: Alignment.centerLeft,
+                  padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                  child: TyperAnimatedTextKit(
+                    text: [
+                      '오늘 하루는 어땠나요?'
+                    ],
+                    textStyle: TextStyle(
+                      fontSize: 25.0,
+                      fontFamily: 'LemonMilkMedium',
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.start,
+                    alignment: AlignmentDirectional.topStart,
+                    isRepeatingAnimation: false,
+                    speed: new Duration(
+                      milliseconds: 200,
+                    ),
+                  )
               ),
               Divider(
                 height: 5.0, // 위 아래 합친 60
@@ -118,7 +151,8 @@ class _ShowRoutinesState extends State<ShowRoutines> {
               )
             ],
           ),
-      )
+        ),
+      ),
     );
   }
 
@@ -177,7 +211,7 @@ class _ShowRoutinesState extends State<ShowRoutines> {
               onPressed: () {
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => DetailRoutine(
-                    title: title,
+                    routineName: title,
                     alarmTime: time,
                     dayList: days,
                   )
