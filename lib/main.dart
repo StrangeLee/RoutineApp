@@ -4,16 +4,9 @@ import 'package:routineapp/edit_detail_routine.dart';
 import 'package:routineapp/show_detail_routines.dart';
 import 'package:routineapp/show_routines.dart';
 import 'package:routineapp/splash.dart';
+import 'package:routineapp/startRoutine.dart';
 
 void main() => runApp(MyApp());
-
-final routes = {
-  '/' : (BuildContext context) => SplashScreen(),
-  '/main' : (BuildContext context) => ShowRoutines(),
-  '/add' : (BuildContext context) => AddPage(),
-  '/detail_list' : (BuildContext context) => DetailRoutine(),
-  '/edit' : (BuildContext context) => EditDetailRoutine(),
-};
 
 class MyApp extends StatelessWidget {
   @override
@@ -21,7 +14,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: '(MR)Make your Routine',
-      home: SplashScreen()
+      home: SplashScreen(),
+      routes: <String, WidgetBuilder>{
+        '/main' : (BuildContext context) => ShowRoutines(),
+        '/add' : (BuildContext context) => AddPage(),
+        '/detail_list' : (BuildContext context) => DetailRoutine(),
+        '/edit' : (BuildContext context) => EditDetailRoutine(),
+        '/start' : (BuildContext context) => StartRoutine(),
+      },
     );
   }
 }

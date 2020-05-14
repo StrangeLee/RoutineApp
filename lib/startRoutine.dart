@@ -7,7 +7,11 @@ class StartRoutine extends StatefulWidget {
   final String title;
   final int timeOut;
 
-  const StartRoutine({Key key, this.title, this.timeOut}) : super(key: key);
+  const StartRoutine({
+    Key key,
+    this.title,
+    this.timeOut
+  }) : super(key: key);
 
   @override
   _StartRoutineState createState() => _StartRoutineState(title, timeOut);
@@ -17,15 +21,16 @@ class _StartRoutineState extends State<StartRoutine> {
 
   String title;
   int timeOut;
+
+  _StartRoutineState(this.title, this.timeOut);
+
   Icon playIcon = Icon(
       Icons.play_circle_outline
   );
-  bool isPlay = false;
-  String showTime;
+  bool isPlay = false; // 정지 시작 확인 변수
+  String showTime; // 남은 시간
 
   Timer _timer;
-
-  _StartRoutineState(this.title, this.timeOut);
 
   @override
   void initState() {
@@ -41,8 +46,19 @@ class _StartRoutineState extends State<StartRoutine> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Center(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -63,7 +79,7 @@ class _StartRoutineState extends State<StartRoutine> {
                   Text(
                     showTime,
                     style: TextStyle(
-                      fontSize: 20.0
+                        fontSize: 20.0
                     ),
                   ),
                   IconButton(
@@ -89,7 +105,6 @@ class _StartRoutineState extends State<StartRoutine> {
               )
             ],
           )
-        ),
       ),
     );
   }

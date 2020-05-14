@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:routineapp/show_routines.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -29,9 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(Duration(seconds: 3), () {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => ShowRoutines()
-      ));
+        Navigator.of(context).pushNamed('/main');
     });
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:routineapp/add_routines.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:routineapp/show_detail_routines.dart';
 
@@ -27,12 +27,15 @@ class ShowRoutines extends StatefulWidget {
 class _ShowRoutinesState extends State<ShowRoutines> {
   var now = new DateTime.now();
 
+  // constructor parameter
   String routineName;
   bool setAlarm;
   String alarmTime;
   List<bool> dayList;
 
   _ShowRoutinesState(this.routineName, this.setAlarm, this.alarmTime, this.dayList);
+
+  int _navyIndex = 0; // bottomNavigation Index
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +52,12 @@ class _ShowRoutinesState extends State<ShowRoutines> {
     }
 
     return WillPopScope(
-      onWillPop: () async => false,
+      onWillPop: () async => true,
       child: Scaffold(
         bottomNavigationBar: BottomNavigationBar(
             showUnselectedLabels: false,
             showSelectedLabels: false,
+            currentIndex: _navyIndex,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(
@@ -80,7 +84,12 @@ class _ShowRoutinesState extends State<ShowRoutines> {
                   )
               )
             ],
-            onTap: null
+            onTap: (value) {
+              setState(() {
+                _navyIndex = value;
+              });
+              navigationStuff(_navyIndex);
+            },
         ),
         body: SafeArea(
           child: Column(
@@ -103,9 +112,7 @@ class _ShowRoutinesState extends State<ShowRoutines> {
                         Icons.add_circle_outline
                     ),
                     onPressed: () => {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => AddPage()
-                      ))
+                      Navigator.of(context).pushNamed('/add')
                     },
                   )
                 ],
@@ -146,6 +153,11 @@ class _ShowRoutinesState extends State<ShowRoutines> {
                       routineItem('Morning Routine', '월, 화, 수, 목, 금', '7:00'),
                       routineItem('Lunch Routine', '월, 화, 수, 목, 금', '12:00'),
                       routineItem('Night Routine', '일, 월, 화, 수, 목, 금, 토', '21:00'),
+                      routineItem('Night 1', '일, 월, 화, 수, 목, 금, 토', '21:00'),
+                      routineItem('Night Ro2utine', '일, 월, 화, 수, 목, 금, 토', '21:00'),
+                      routineItem('Night Rout3ine', '일, 월, 화, 수, 목, 금, 토', '21:00'),
+                      routineItem('Night Rout6ine', '일, 월, 화, 수, 목, 금, 토', '21:00'),
+                      routineItem('Night Rout4ine', '일, 월, 화, 수, 목, 금, 토', '21:00'),
                     ],
                   )
               )
@@ -156,6 +168,7 @@ class _ShowRoutinesState extends State<ShowRoutines> {
     );
   }
 
+  // ListView Item
   Widget routineItem(String title, String days, String time) {
     return Padding(
       padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
@@ -209,13 +222,15 @@ class _ShowRoutinesState extends State<ShowRoutines> {
                   Icons.arrow_forward_ios
               ),
               onPressed: () {
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => DetailRoutine(
+                print('Head Routine Item is $title');
+                Navigator.of(context).pushNamed(
+                  '/detail_list',
+                  arguments: DetailRoutine(
                     routineName: title,
                     alarmTime: time,
                     dayList: days,
                   )
-                ));
+                );
               },
               alignment: Alignment.centerRight,
             )
@@ -225,6 +240,7 @@ class _ShowRoutinesState extends State<ShowRoutines> {
     );
   }
 
+  // 요일을 얻는 메서드
   String getDay(int number) {
     switch (number) {
       case 0 :
@@ -251,6 +267,50 @@ class _ShowRoutinesState extends State<ShowRoutines> {
       default :
         return 'error';
     }
+  }
+
+  void navigationStuff(int index) {
+    print('now index = $index');
+    switch(index) {
+      case 0:
+        exitDialog();
+        break;
+      case 1:
+        break;
+      case 2:
+        break;
+    }
+  }
+
+  // app exit dialog
+  Future<void> exitDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('나갈거에욥?!'),
+          content: Text(
+            'Chose one'
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('아니용!'),
+              onPressed: () {
+                print('do nothing');
+                Navigator.of(context).pop();
+              }
+            ),
+            FlatButton(
+              child: Text('넹!'),
+              onPressed: () {
+                SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
 }

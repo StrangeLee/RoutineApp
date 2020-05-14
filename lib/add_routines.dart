@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'day_box.dart';
 import 'show_routines.dart';
 
@@ -11,15 +10,12 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
-  TextEditingController _routineNameCtr;
+  TextEditingController _routineNameCtr; // TextFields' Controller
+
   bool _onAlarm = false;
-  List<bool> isSelected = List.generate(2, (index) => false);
-  List<String> dayList = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-  TimeOfDay _time;
-  TimeOfDay _picked;
-
   String _alarmTime = '0:00 AM >';
+
+  TimeOfDay _picked; // user selected time value;
 
   Future<Null> selectTime(BuildContext context) async {
     _picked = await showTimePicker(
@@ -32,9 +28,8 @@ class _AddPageState extends State<AddPage> {
 
     setState(() {
       if (_picked != null) {
-        _time = _picked;
-        print(_time);
-        _alarmTime = localizations.formatTimeOfDay(_time) + ' >';
+        print(_picked);
+        _alarmTime = localizations.formatTimeOfDay(_picked) + ' >';
       }
     });
   }
@@ -51,187 +46,167 @@ class _AddPageState extends State<AddPage> {
       resizeToAvoidBottomInset: false,
       body: SafeArea(
           child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        'New Routine',
-                        style: TextStyle(
-                          fontFamily: 'LemonMilkMedium',
-                          fontSize: 30.0,
-                        ),
+            padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'New Routine',
+                      style: TextStyle(
+                        fontFamily: 'LemonMilkMedium',
+                        fontSize: 30.0,
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(0, 20, 0, 25),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                  hintText: '루틴 이름 입력',
-                                  hintStyle: TextStyle(
-                                      color: Colors.grey[400],
-                                      fontWeight: FontWeight.bold),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  filled: true,
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                    borderSide: BorderSide.none,
-                                  )),
-                              controller: _routineNameCtr,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(5, 5, 0, 5),
-                            child: Text(
-                              '루틴 알람',
-                              style: TextStyle(
-                                  color: Colors.grey[500],
-                                  fontSize: 18.0,
-                                  fontFamily: 'malgunBold'),
-                            ),
-                          ),
-                          settingBox(
-                              '알림 상태',
-                              Switch(
-                                value: _onAlarm,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _onAlarm = value;
-                                  });
-                                },
-                              )),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          settingBox(
-                              '알림 시간',
-                              InkWell(
-                                child: Text(
-                                  _alarmTime,
-                                  style: TextStyle(
-                                      fontFamily: 'LemonMilkLight',
-                                      color: Colors.grey),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 20, 0, 25),
+                          child: TextField(
+                            decoration: InputDecoration(
+                                hintText: '루틴 이름 입력',
+                                hintStyle: TextStyle(
+                                    color: Colors.grey[400],
+                                    fontWeight: FontWeight.bold),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  borderSide: BorderSide.none,
                                 ),
-                                onTap: () {
-                                  selectTime(context);
-                                },
-                              ))
-                        ],
-                      ),
-                      SizedBox(
-                        height: 15.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          DayButton(day: '일'),
-                          DayButton(day: '월'),
-                          DayButton(day: '화'),
-                          DayButton(day: '수'),
-                          DayButton(day: '목'),
-                          DayButton(day: '금'),
-                          DayButton(day: '토'),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 15.0,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(5, 10, 0, 5),
-                        child: Text(
-                          '습관 종료 알림',
-                          style: TextStyle(
-                              color: Colors.grey[500],
-                              fontSize: 18.0,
-                              fontFamily: 'malgunBold'),
+                                filled: true,
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  borderSide: BorderSide.none,
+                                )),
+                            controller: _routineNameCtr,
+                          ),
                         ),
-                      ),
-                      settingBox(
-                        '알림 종류',
-                        InkWell(
-                          onTap: null, // Todo : Firebase Push Notification
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(5, 5, 0, 5),
                           child: Text(
-                            '기본 >',
+                            '루틴 알람',
                             style: TextStyle(
-                                fontFamily: 'LemonMilkLight',
-                                color: Colors.grey),
+                                color: Colors.grey[500],
+                                fontSize: 18.0,
+                                fontFamily: 'malgunBold'),
                           ),
                         ),
+                        settingBox(
+                            '알림 상태',
+                            Switch(
+                              value: _onAlarm,
+                              onChanged: (value) {
+                                setState(() {
+                                  _onAlarm = value;
+                                });
+                              },
+                            )),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        settingBox(
+                            '알림 시간',
+                            InkWell(
+                              child: Text(
+                                _alarmTime,
+                                style: TextStyle(
+                                    fontFamily: 'LemonMilkLight',
+                                    color: Colors.grey),
+                              ),
+                              onTap: () {
+                                selectTime(context);
+                              },
+                            ))
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15.0,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        DayButton(day: '일'),
+                        DayButton(day: '월'),
+                        DayButton(day: '화'),
+                        DayButton(day: '수'),
+                        DayButton(day: '목'),
+                        DayButton(day: '금'),
+                        DayButton(day: '토'),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15.0,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(5, 10, 0, 5),
+                      child: Text(
+                        '습관 종료 알림',
+                        style: TextStyle(
+                            color: Colors.grey[500],
+                            fontSize: 18.0,
+                            fontFamily: 'malgunBold'),
                       ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      SizedBox(
-                        width: 150.0,
-                        height: 45.0,
-                        child: RaisedButton(
-                          onPressed: () {
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) => ShowRoutines()));
-                          },
-                          elevation: 5.0,
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          child: Text('취소'),
+                    ),
+                    settingBox(
+                      '알림 종류',
+                      InkWell(
+                        onTap: null, // Todo : Firebase Push Notification
+                        child: Text(
+                          '기본 >',
+                          style: TextStyle(
+                              fontFamily: 'LemonMilkLight',
+                              color: Colors.grey),
                         ),
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      SizedBox(
-                        width: 150.0,
-                        height: 45.0,
-                        child: RaisedButton(
-                          onPressed: () {
-                            confirmFunction();
-                          },
-                          elevation: 5.0,
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          child: Text('확인'),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    SizedBox(
+                      width: 150.0,
+                      height: 45.0,
+                      child: RaisedButton(
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => ShowRoutines()));
+                        },
+                        elevation: 5.0,
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
                         ),
+                        child: Text('취소'),
                       ),
-                    ],
-                  ),
-                ],
-              ))),
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.arrow_back,
-            ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.assessment,
-            ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.person,
-            ),
-          )
-        ],
-        onTap: (index) {
-
-        },
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    SizedBox(
+                      width: 150.0,
+                      height: 45.0,
+                      child: RaisedButton(
+                        onPressed: () {
+                          confirmFunction();
+                        },
+                        elevation: 5.0,
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Text('확인'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            )
+        )
       ),
     );
   }
@@ -309,11 +284,11 @@ class _AddPageState extends State<AddPage> {
               child: Text('확인'),
               onPressed: () {
                 debugPrint('routineName is ' + _routineNameCtr.text);
-                debugPrint('Selected TIme  is $_time');
+                debugPrint('Selected TIme  is $_picked');
 
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => ShowRoutines(
-                    alarmTime: _time.toString(),
+                    alarmTime: _picked.toString(),
                   ),
                 ));
               },
@@ -326,7 +301,7 @@ class _AddPageState extends State<AddPage> {
 
   // 확인 버튼 동작 메서드
   void confirmFunction() {
-    if (_routineNameCtr.text == null || _time == null) {
+    if (_routineNameCtr.text == null || _picked == null) {
       noticeDialog(); // ignore: unnecessary_statements
       debugPrint('Something is null');
     } else {

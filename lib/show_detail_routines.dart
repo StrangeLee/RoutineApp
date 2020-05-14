@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:routineapp/edit_detail_routine.dart';
 import 'package:routineapp/startRoutine.dart';
-import 'main.dart';
 
 class DetailRoutine extends StatefulWidget {
 
@@ -11,10 +9,16 @@ class DetailRoutine extends StatefulWidget {
   final String alarmTime;
   final String dayList;
 
-  const DetailRoutine({Key key, this.routineName, this.alarmTime, this.dayList}) : super(key: key);
+  const DetailRoutine({
+    Key key,
+    this.routineName,
+    this.alarmTime,
+    this.dayList
+  }) : super(key: key);
+
 
   @override
-  _DetailRoutineState createState() => _DetailRoutineState(this.routineName, this.alarmTime, this.dayList);
+  _DetailRoutineState createState() => _DetailRoutineState(routineName, alarmTime, dayList);
 }
 
 class _DetailRoutineState extends State<DetailRoutine> {
@@ -25,60 +29,99 @@ class _DetailRoutineState extends State<DetailRoutine> {
 
   _DetailRoutineState(this.routineName, this.alarmTime, this.dayList);
 
-  // ToDo : AppBar UI 수정 하기
+  int _navyIndex = 0;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0.0,
-        title: Text(
-            '$routineName ',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 30.0,
-            fontFamily: 'LemonMilkMedium',
+    return WillPopScope(
+      onWillPop: () async => true,
+      child: Scaffold(
+          backgroundColor: Colors.white,
+          bottomNavigationBar: BottomNavigationBar(
+            showUnselectedLabels: false,
+            showSelectedLabels: false,
+            currentIndex: _navyIndex,
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.arrow_back,
+                ),
+                title: Text(
+                    'back'
+                ),
+              ),
+              BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.assessment,
+                  ),
+                  title: Text(
+                      'stat'
+                  )
+              ),
+              BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.person,
+                  ),
+                  title: Text(
+                      'setting'
+                  )
+              )
+            ],
+            onTap: (value) {
+              setState(() {
+                _navyIndex = value;
+              });
+              navigationStuff(_navyIndex);
+            },
           ),
-        ),
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(
-                Icons.menu,
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0.0,
+            title: Text(
+              '$routineName ',
+              style: TextStyle(
                 color: Colors.black,
+                fontSize: 30.0,
+                fontFamily: 'LemonMilkMedium',
               ),
-              // ToDo : Add onPressed
-              onPressed: () {
-                Navigator.pushNamed(context, '/edit');
-              },
+            ),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(
+                  Icons.menu,
+                  color: Colors.black,
+                ),
+                // ToDo : Add onPressed
+                onPressed: null,
+              )
+            ],
+          ),
+          body: Padding(
+            padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: ListView(
+                    children: <Widget>[
+                      detailItem('책 읽기', 5),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      detailItem('책 읽기', 1),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      detailItem('책 읽기', 30),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           )
-        ],
       ),
-      body: Padding(
-        padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: ListView(
-                children: <Widget>[
-                  detailItem('책 읽기', 5),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  detailItem('책 읽기', 1),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  detailItem('책 읽기', 30),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      )
     );
   }
 
@@ -95,12 +138,13 @@ class _DetailRoutineState extends State<DetailRoutine> {
       color: Colors.white,
       child: InkWell(
         onTap: () {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => StartRoutine(
+          Navigator.of(context).pushNamed(
+            '/start',
+            arguments: StartRoutine(
               title: title,
               timeOut: time,
-            )
-          ));
+            ),
+          );
         },
         child: Container(
           padding: EdgeInsets.fromLTRB(
@@ -151,6 +195,19 @@ class _DetailRoutineState extends State<DetailRoutine> {
         ),
       )
     );
+  }
+
+  void navigationStuff(int index) {
+    print('now index = $index');
+    switch(index) {
+      case 0:
+        Navigator.pop(context);
+        break;
+      case 1:
+        break;
+      case 2:
+        break;
+    }
   }
 
 }

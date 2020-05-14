@@ -26,6 +26,7 @@ dependencies:
   intl: ^0.15.8
   day_selector: ^1.0.0
   animated_text_kit: ^2.0.0
+  double_back_to_close_app: ^1.2.0
 
 dev_dependencies:
   flutter_test:
