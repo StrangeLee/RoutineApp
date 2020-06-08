@@ -1,21 +1,22 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:routineapp/startRoutine.dart';
+import 'file:///C:/Programing/Flutter/routine_app/lib/page/startRoutine.dart';
 
 class DetailRoutine extends StatefulWidget {
 
-  final String routineName;
-  final String alarmTime;
-  final String dayList;
+   final String routineName;
+   final String alarmTime;
+   final String dayList;
 
-  const DetailRoutine({
+  DetailRoutine({
     Key key,
-    this.routineName,
-    this.alarmTime,
-    this.dayList
+    @required this.routineName,
+    @required this.alarmTime,
+    @required this.dayList
   }) : super(key: key);
-
 
   @override
   _DetailRoutineState createState() => _DetailRoutineState(routineName, alarmTime, dayList);
@@ -77,11 +78,13 @@ class _DetailRoutineState extends State<DetailRoutine> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             elevation: 0.0,
+            centerTitle: false,
             title: Text(
-              '$routineName ',
+              routineName,
+              textAlign: TextAlign.start,
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 30.0,
+                fontSize: 20.0,
                 fontFamily: 'LemonMilkMedium',
               ),
             ),
@@ -125,30 +128,38 @@ class _DetailRoutineState extends State<DetailRoutine> {
     );
   }
 
-  // Todo : 메서드 인자 이름 바꾸기
   Widget detailItem(String title, int time) {
     return Material(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          side: BorderSide(
-            color: Colors.black,
-            width: 1.0,
-          )
-      ),
+//      shape: RoundedRectangleBorder(
+//          borderRadius: BorderRadius.circular(15.0),
+//          side: BorderSide(
+//            color: Colors.black,
+//            width: 1.0,
+//          )
+//      ),
       color: Colors.white,
       child: InkWell(
         onTap: () {
-          Navigator.of(context).pushNamed(
-            '/start',
-            arguments: StartRoutine(
-              title: title,
-              timeOut: time,
-            ),
+          Navigator.of(context).push(
+            new MaterialPageRoute(
+              builder: (BuildContext context) => new StartRoutine(
+                title: title,
+                timeOut: time
+              )
+            )
           );
         },
         child: Container(
           padding: EdgeInsets.fromLTRB(
-              10, 10, 10, 10
+              5, 5, 5, 5
+          ),
+          decoration: new BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15.0),
+            border: Border.all(
+              color: Colors.black,
+              width: 1.0,
+            )
           ),
           child: Row(
             mainAxisSize: MainAxisSize.max,

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'day_box.dart';
+import '../widget/day_box.dart';
 import 'show_routines.dart';
 
 class AddPage extends StatefulWidget {
@@ -64,7 +64,7 @@ class _AddPageState extends State<AddPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Padding(
-                          padding: EdgeInsets.fromLTRB(0, 20, 0, 25),
+                          padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
                           child: TextField(
                             decoration: InputDecoration(
                                 hintText: '루틴 이름 입력',
@@ -124,23 +124,25 @@ class _AddPageState extends State<AddPage> {
                     SizedBox(
                       height: 15.0,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        DayButton(day: '일'),
-                        DayButton(day: '월'),
-                        DayButton(day: '화'),
-                        DayButton(day: '수'),
-                        DayButton(day: '목'),
-                        DayButton(day: '금'),
-                        DayButton(day: '토'),
-                      ],
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: <Widget>[
+                          DayButton(day: '일'),
+                          DayButton(day: '월'),
+                          DayButton(day: '화'),
+                          DayButton(day: '수'),
+                          DayButton(day: '목'),
+                          DayButton(day: '금'),
+                          DayButton(day: '토'),
+                        ],
+                      ),
                     ),
                     SizedBox(
                       height: 15.0,
                     ),
                     Padding(
-                      padding: EdgeInsets.fromLTRB(5, 10, 0, 5),
+                      padding: EdgeInsets.fromLTRB(5, 0, 0, 5),
                       child: Text(
                         '습관 종료 알림',
                         style: TextStyle(

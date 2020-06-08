@@ -7,11 +7,10 @@ class StartRoutine extends StatefulWidget {
   final String title;
   final int timeOut;
 
-  const StartRoutine({
-    Key key,
-    this.title,
-    this.timeOut
-  }) : super(key: key);
+  StartRoutine({
+    @required this.title,
+    @required this.timeOut
+  });
 
   @override
   _StartRoutineState createState() => _StartRoutineState(title, timeOut);
@@ -35,7 +34,8 @@ class _StartRoutineState extends State<StartRoutine> {
   @override
   void initState() {
     super.initState();
-    timeOut *= 60;
+    print('time = $timeOut');
+    timeOut = 60 * timeOut;
     if (timeOut >= 60) {
        showTime = (timeOut / 60).toString() + ' : ' + (timeOut % 60).toString();
     } else {
@@ -84,20 +84,22 @@ class _StartRoutineState extends State<StartRoutine> {
                   ),
                   IconButton(
                     onPressed: () {
-                      setState(() {
-                        isPlay = !isPlay;
-                        if (isPlay) { // 멈추기, true 동작 중일때 누르는거 즉 icon 을 Play로
-                          playIcon = Icon(
-                              Icons.stop
-                          );
-                          startTimer();
-                        } else { // 시작하기
-                          playIcon = Icon(
-                              Icons.play_circle_outline
-                          );
-                          startTimer();
-                        }
-                      });
+                      if (mounted) {
+                        setState(() {
+                          isPlay = !isPlay;
+                          if (isPlay) { // 멈추기, true 동작 중일때 누르는거 즉 icon 을 Play로
+                            playIcon = Icon(
+                                Icons.stop
+                            );
+                            startTimer();
+                          } else { // 시작하기
+                            playIcon = Icon(
+                                Icons.play_circle_outline
+                            );
+                            startTimer();
+                          }
+                        });
+                      }
                     },
                     icon: playIcon,
                   )
@@ -111,24 +113,28 @@ class _StartRoutineState extends State<StartRoutine> {
 
     void startTimer() async {
     const oneSec = Duration(seconds: 1);
-    _timer = Timer.periodic(oneSec, (timer) {
-      setState(() {
-        if (timeOut < 1) {
-          timer.cancel();
-          // Todo : Timer 가 0일때 메서드 추가
-        } else if (!isPlay) {
-          timer.cancel();
-        } else {
-          timeOut -= 1;
-        }
+    if (isPlay) {
+      _timer = Timer.periodic(oneSec, (timer) {
+        if (mounted) {
+          setState(() {
+            if (timeOut < 1) {
+              timer.cancel();
+              // Todo : Timer 가 0일때 메서드 추가
+            } else {
+              timeOut -= 1;
+            }
 
-        if (timeOut >= 60) {
-          showTime = (timeOut / 60).floor().toString() + ' : ' + (timeOut % 60).toString();
-        } else {
-          showTime = timeOut.toString();
+            if (timeOut >= 60) {
+              showTime = (timeOut / 60).floor().toString() + ' : ' + (timeOut % 60).toString();
+            } else {
+              showTime = timeOut.toString();
+            }
+          });
         }
       });
-    });
+    } else {
+      _timer.cancel();
+    }
   }
 
 }

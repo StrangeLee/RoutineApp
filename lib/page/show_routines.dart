@@ -3,22 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:routineapp/show_detail_routines.dart';
+import 'file:///C:/Programing/Flutter/routine_app/lib/page/show_detail_routines.dart';
 
 class ShowRoutines extends StatefulWidget {
   // TODO : 생성자 추가
-  String routineName;
-  bool setAlarm;
-  String alarmTime;
-  List<bool> dayList;
+  final String routineName;
+  final bool setAlarm;
+  final String alarmTime;
+  final List<bool> dayList;
 
   ShowRoutines({
-    Key key,
     @required this.routineName,
     @required this.setAlarm,
     @required this.alarmTime,
     @required this.dayList
-  }) : super(key : key);
+  });
 
   @override
   _ShowRoutinesState createState() => _ShowRoutinesState(routineName, setAlarm, alarmTime, dayList);
@@ -223,12 +222,14 @@ class _ShowRoutinesState extends State<ShowRoutines> {
               ),
               onPressed: () {
                 print('Head Routine Item is $title');
-                Navigator.of(context).pushNamed(
-                  '/detail_list',
-                  arguments: DetailRoutine(
-                    routineName: title,
-                    alarmTime: time,
-                    dayList: days,
+                Navigator.of(context).push(
+                  new MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                    new DetailRoutine(
+                      routineName: title,
+                      alarmTime: time,
+                      dayList: days
+                    )
                   )
                 );
               },

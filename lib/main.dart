@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:routineapp/add_routines.dart';
-import 'package:routineapp/edit_detail_routine.dart';
-import 'package:routineapp/show_detail_routines.dart';
-import 'package:routineapp/show_routines.dart';
-import 'package:routineapp/splash.dart';
-import 'package:routineapp/startRoutine.dart';
+import 'file:///C:/Programing/Flutter/routine_app/lib/page/add_routines.dart';
+import 'file:///C:/Programing/Flutter/routine_app/lib/page/edit_detail_routine.dart';
+import 'file:///C:/Programing/Flutter/routine_app/lib/page/show_detail_routines.dart';
+import 'file:///C:/Programing/Flutter/routine_app/lib/page/show_routines.dart';
+import 'file:///C:/Programing/Flutter/routine_app/lib/page/startRoutine.dart';
+import 'page/splash.dart';
 
 void main() => runApp(MyApp());
 
