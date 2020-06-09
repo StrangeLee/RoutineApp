@@ -35,7 +35,7 @@ class _StartRoutineState extends State<StartRoutine> {
   void initState() {
     super.initState();
     print('time = $timeOut');
-    timeOut = 60 * timeOut;
+    timeOut *= 60;
     if (timeOut >= 60) {
        showTime = (timeOut / 60).toString() + ' : ' + (timeOut % 60).toString();
     } else {

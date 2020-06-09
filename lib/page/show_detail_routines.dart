@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'file:///C:/Programing/Flutter/routine_app/lib/page/startRoutine.dart';
+import 'package:routineapp/widget/edit_pop_dialog.dart';
 
 class DetailRoutine extends StatefulWidget {
 
@@ -12,11 +13,10 @@ class DetailRoutine extends StatefulWidget {
    final String dayList;
 
   DetailRoutine({
-    Key key,
     @required this.routineName,
     @required this.alarmTime,
     @required this.dayList
-  }) : super(key: key);
+  });
 
   @override
   _DetailRoutineState createState() => _DetailRoutineState(routineName, alarmTime, dayList);
@@ -28,9 +28,26 @@ class _DetailRoutineState extends State<DetailRoutine> {
   String alarmTime;
   String dayList;
 
+  // menu icon 세팅
+  bool isMenu = true;
+  Icon menuIcon = Icon(
+    Icons.menu,
+    color: Colors.black,
+  );
+  Icon cancelIcon = Icon(
+    Icons.cancel,
+    color: Colors.black,
+  );
+
   _DetailRoutineState(this.routineName, this.alarmTime, this.dayList);
 
   int _navyIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    print('title = $routineName');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +56,8 @@ class _DetailRoutineState extends State<DetailRoutine> {
       child: Scaffold(
           backgroundColor: Colors.white,
           bottomNavigationBar: BottomNavigationBar(
-            showUnselectedLabels: false,
             showSelectedLabels: false,
+            showUnselectedLabels: false,
             currentIndex: _navyIndex,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
@@ -78,10 +95,9 @@ class _DetailRoutineState extends State<DetailRoutine> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             elevation: 0.0,
-            centerTitle: false,
+            automaticallyImplyLeading: false,
             title: Text(
               routineName,
-              textAlign: TextAlign.start,
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 20.0,
@@ -90,12 +106,19 @@ class _DetailRoutineState extends State<DetailRoutine> {
             ),
             actions: <Widget>[
               IconButton(
-                icon: Icon(
-                  Icons.menu,
-                  color: Colors.black,
-                ),
+                icon: isMenu ? menuIcon : cancelIcon,
                 // ToDo : Add onPressed
-                onPressed: null,
+                onPressed: () {
+                  setState(() {
+                    isMenu = !isMenu;
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => EditDialog(
+                        title: 'abc',
+                      ),
+                    );
+                  });
+                },
               )
             ],
           ),
