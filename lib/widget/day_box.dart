@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:routineapp/main.dart';
 
 class DayButton extends StatefulWidget {
   final String day;
@@ -37,9 +38,9 @@ class _DayButtonState extends State<DayButton> {
           alignment: Alignment.center,
           decoration: new BoxDecoration(
               shape: BoxShape.circle,
-              color: clicked ? Colors.black : Colors.white,
+              color: clicked ? MyApp.colorLightBlue : Colors.white,
               border: Border.all(
-                color: Colors.black,
+                color: MyApp.colorLightBlue,
                 width: 2.0,
               )
           ),

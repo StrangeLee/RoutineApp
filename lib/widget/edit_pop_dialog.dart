@@ -1,6 +1,7 @@
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:toast/toast.dart';
 
 class Consts {
   Consts._();
@@ -10,9 +11,6 @@ class Consts {
 }
 
 class EditDialog extends StatelessWidget {
-  String title;
-
-  EditDialog({@required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -33,15 +31,31 @@ class EditDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          card(),
+          card('추가', () {
+            // ToDo : add Navigor
+          }),
           SizedBox(
             height: 10.0,
           ),
-          card(),
+          card('편집', () {
+            Toast.show(
+                '편집',
+                context,
+                duration: Toast.LENGTH_SHORT,
+                gravity: Toast.BOTTOM
+            );
+          }),
           SizedBox(
             height: 10.0,
           ),
-          card(),
+          card('전체 삭제', () {
+            Toast.show(
+              '전체 삭제',
+              context,
+              duration: Toast.LENGTH_SHORT,
+              gravity: Toast.BOTTOM
+            );
+          }),
           SizedBox(
             height: 10.0,
           ),
@@ -50,38 +64,43 @@ class EditDialog extends StatelessWidget {
     );
   }
 
-  Widget card() {
-    return Container(
-      padding: EdgeInsets.only(
-        top: Consts.padding,
-        bottom: Consts.padding,
-        left: Consts.padding + Consts.avatarRadius,
-        right: Consts.padding + Consts.avatarRadius,
-      ),
+  Widget card(String title, Function function) {
+    return InkWell(
+      onTap: () {
+        function();
+      },
+      child: Container(
+        padding: EdgeInsets.only(
+          top: Consts.padding,
+          bottom: Consts.padding,
+          left: Consts.padding + Consts.avatarRadius,
+          right: Consts.padding + Consts.avatarRadius,
+        ),
 //      margin: EdgeInsets.only(top: Consts.avatarRadius),
-      decoration: new BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(Consts.padding),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 5.0,
-            offset: const Offset(0.0, 5.0),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min, // To make the card compact
-        children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 24.0,
-              fontWeight: FontWeight.w700,
+        decoration: new BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(Consts.padding),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 5.0,
+              offset: const Offset(0.0, 5.0),
             ),
-          ),
-        ],
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // To make the card compact
+          children: <Widget>[
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

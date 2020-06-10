@@ -3,27 +3,27 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:gradient_text/gradient_text.dart';
+import '../main.dart';
 import 'file:///C:/Programing/Flutter/routine_app/lib/page/startRoutine.dart';
 import 'package:routineapp/widget/edit_pop_dialog.dart';
 
 class DetailRoutine extends StatefulWidget {
+  final String routineName;
+  final String alarmTime;
+  final String dayList;
 
-   final String routineName;
-   final String alarmTime;
-   final String dayList;
-
-  DetailRoutine({
-    @required this.routineName,
-    @required this.alarmTime,
-    @required this.dayList
-  });
+  DetailRoutine(
+      {@required this.routineName,
+      @required this.alarmTime,
+      @required this.dayList});
 
   @override
-  _DetailRoutineState createState() => _DetailRoutineState(routineName, alarmTime, dayList);
+  _DetailRoutineState createState() =>
+      _DetailRoutineState(routineName, alarmTime, dayList);
 }
 
 class _DetailRoutineState extends State<DetailRoutine> {
-
   String routineName;
   String alarmTime;
   String dayList;
@@ -54,99 +54,114 @@ class _DetailRoutineState extends State<DetailRoutine> {
     return WillPopScope(
       onWillPop: () async => true,
       child: Scaffold(
-          backgroundColor: Colors.white,
-          bottomNavigationBar: BottomNavigationBar(
-            showSelectedLabels: false,
-            showUnselectedLabels: false,
-            currentIndex: _navyIndex,
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
+        bottomNavigationBar: BottomNavigationBar(
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          currentIndex: _navyIndex,
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.arrow_back,
+              ),
+              title: Text('back'),
+            ),
+            BottomNavigationBarItem(
                 icon: Icon(
-                  Icons.arrow_back,
+                  Icons.assessment,
                 ),
-                title: Text(
-                    'back'
+                title: Text('stat')),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.person,
                 ),
-              ),
-              BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.assessment,
-                  ),
-                  title: Text(
-                      'stat'
-                  )
-              ),
-              BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.person,
-                  ),
-                  title: Text(
-                      'setting'
-                  )
-              )
-            ],
-            onTap: (value) {
-              setState(() {
-                _navyIndex = value;
-              });
-              navigationStuff(_navyIndex);
-            },
+                title: Text('setting'))
+          ],
+          onTap: (value) {
+            setState(() {
+              _navyIndex = value;
+            });
+            navigationStuff(_navyIndex);
+          },
+        ),
+        appBar: AppBar(
+          backgroundColor: Colors.blue[100],
+          elevation: 0.0,
+          automaticallyImplyLeading: false,
+          title: GradientText(
+            routineName,
+            gradient: LinearGradient(
+                colors: [MyApp.colorDeepBlue, MyApp.colorLightBlue]),
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20.0,
+              fontFamily: 'LemonMilkMedium',
+            ),
           ),
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0.0,
-            automaticallyImplyLeading: false,
-            title: Text(
-              routineName,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 20.0,
-                fontFamily: 'LemonMilkMedium',
+          actions: <Widget>[
+            IconButton(
+              icon: isMenu ? menuIcon : cancelIcon,
+              // ToDo : Add onPressed
+              onPressed: () {
+                setState(() {
+                  isMenu = !isMenu;
+                  showGeneralDialog(
+                    barrierColor: Colors.black.withOpacity(0.5),
+                    transitionBuilder: (context, a1, a2, widget) {
+                      return Transform.scale(
+                        scale: a1.value,
+                        child: Opacity(
+                          opacity: a1.value,
+                          child: EditDialog(),
+                        ),
+                      );
+                    },
+                    transitionDuration: Duration(milliseconds: 200),
+                    barrierDismissible: true,
+                    barrierLabel: '',
+                    context: context,
+                    pageBuilder: (context, animation1, animation2) {},
+                  );
+                });
+              },
+            )
+          ],
+        ),
+        body: SafeArea(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                end: Alignment.topCenter,
+                begin: Alignment.bottomCenter,
+                colors: [Colors.lightBlueAccent, Colors.blue[100]]
+              )
+            ),
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: ListView(
+                      children: <Widget>[
+                        detailItem('책 읽기', 5),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        detailItem('책 읽기', 1),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        detailItem('책 읽기', 30),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
               ),
             ),
-            actions: <Widget>[
-              IconButton(
-                icon: isMenu ? menuIcon : cancelIcon,
-                // ToDo : Add onPressed
-                onPressed: () {
-                  setState(() {
-                    isMenu = !isMenu;
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) => EditDialog(
-                        title: 'abc',
-                      ),
-                    );
-                  });
-                },
-              )
-            ],
           ),
-          body: Padding(
-            padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: ListView(
-                    children: <Widget>[
-                      detailItem('책 읽기', 5),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      detailItem('책 읽기', 1),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      detailItem('책 읽기', 30),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          )
+        ),
       ),
     );
   }
@@ -160,80 +175,69 @@ class _DetailRoutineState extends State<DetailRoutine> {
 //            width: 1.0,
 //          )
 //      ),
-      color: Colors.white,
-      child: InkWell(
-        onTap: () {
-          Navigator.of(context).push(
-            new MaterialPageRoute(
-              builder: (BuildContext context) => new StartRoutine(
-                title: title,
-                timeOut: time
-              )
-            )
-          );
-        },
-        child: Container(
-          padding: EdgeInsets.fromLTRB(
-              5, 5, 5, 5
-          ),
-          decoration: new BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15.0),
-            border: Border.all(
-              color: Colors.black,
-              width: 1.0,
-            )
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Icon(
-                    Icons.book,
-                    size: 35.0,
-                  ),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                  Text(
-                    title,
-                    style: TextStyle(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            Navigator.of(context).push(new MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    new StartRoutine(title: title, timeOut: time)));
+          },
+          child: Container(
+            padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+            decoration: new BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15.0),
+                border: Border.all(
+                  color: Colors.black,
+                  width: 1.0,
+                )),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.book,
+                      size: 35.0,
+                    ),
+                    SizedBox(
+                      width: 10.0,
+                    ),
+                    Text(
+                      title,
+                      style:
+                          TextStyle(fontFamily: 'malgunBold', fontSize: 17.0),
+                    ),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Icon(
+                      Icons.timer,
+                    ),
+                    Text(
+                      time.toString() + 'min',
+                      style: TextStyle(
                         fontFamily: 'malgunBold',
-                        fontSize: 17.0
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 5.0,
-                  ),
-                ],
-              ),
-              Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.timer,
-                  ),
-                  Text(
-                    time.toString() + 'min',
-                    style: TextStyle(
-                      fontFamily: 'malgunBold',
-                    ),
-                  ),
-                ],
-              )
-            ],
+                  ],
+                )
+              ],
+            ),
           ),
-        ),
-      )
-    );
+        ));
   }
 
   void navigationStuff(int index) {
     print('now index = $index');
-    switch(index) {
+    switch (index) {
       case 0:
         Navigator.pop(context);
         break;
@@ -243,5 +247,4 @@ class _DetailRoutineState extends State<DetailRoutine> {
         break;
     }
   }
-
 }
