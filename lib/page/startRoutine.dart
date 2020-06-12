@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'package:routineapp/main.dart';
+
 class StartRoutine extends StatefulWidget {
 
   final String title;
@@ -24,7 +26,8 @@ class _StartRoutineState extends State<StartRoutine> {
   _StartRoutineState(this.title, this.timeOut);
 
   Icon playIcon = Icon(
-      Icons.play_circle_outline
+    Icons.play_circle_outline,
+    size: 25.0,
   );
   bool isPlay = false; // 정지 시작 확인 변수
   String showTime; // 남은 시간
@@ -37,7 +40,7 @@ class _StartRoutineState extends State<StartRoutine> {
     print('time = $timeOut');
     timeOut *= 60;
     if (timeOut >= 60) {
-       showTime = (timeOut / 60).toString() + ' : ' + (timeOut % 60).toString();
+       showTime = (timeOut / 60).floor().toString() + ' : ' + (timeOut % 60).toString();
     } else {
       showTime = timeOut.toString();
     }
@@ -46,9 +49,9 @@ class _StartRoutineState extends State<StartRoutine> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: MyApp.colorPurple,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: MyApp.colorPurple,
         elevation: 0.0,
         leading: IconButton(
           icon: Icon(
@@ -58,56 +61,67 @@ class _StartRoutineState extends State<StartRoutine> {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Icon(
-                Icons.book,
-                size: 250.0,
-              ),
-              Text(
-                title,
-                style: TextStyle(
-                  fontFamily: 'malgunBold',
-                  fontSize: 30.0,
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    showTime,
-                    style: TextStyle(
-                        fontSize: 20.0
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      if (mounted) {
-                        setState(() {
-                          isPlay = !isPlay;
-                          if (isPlay) { // 멈추기, true 동작 중일때 누르는거 즉 icon 을 Play로
-                            playIcon = Icon(
-                                Icons.stop
-                            );
-                            startTimer();
-                          } else { // 시작하기
-                            playIcon = Icon(
-                                Icons.play_circle_outline
-                            );
-                            startTimer();
-                          }
-                        });
-                      }
-                    },
-                    icon: playIcon,
-                  )
-                ],
-              )
-            ],
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [MyApp.colorPurple, MyApp.colorPlum, MyApp.colorDeepBlue]
           )
-      ),
+        ),
+        child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.book,
+                  size: 250.0,
+                ),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontFamily: 'malgunBold',
+                    fontSize: 30.0,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      showTime,
+                      style: TextStyle(
+                          fontSize: 30.0
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        if (mounted) {
+                          setState(() {
+                            isPlay = !isPlay;
+                            if (isPlay) { // 멈추기, true 동작 중일때 누르는거 즉 icon 을 Play로
+                              playIcon = Icon(
+                                Icons.stop,
+                                size: 25.0,
+                              );
+                              startTimer();
+                            } else { // 시작하기
+                              playIcon = Icon(
+                                Icons.play_circle_outline,
+                                size: 25.0,
+                              );
+                              startTimer();
+                            }
+                          });
+                        }
+                      },
+                      icon: playIcon,
+                    ),
+                  ],
+                )
+              ],
+            )
+        ),
+      )
     );
   }
 

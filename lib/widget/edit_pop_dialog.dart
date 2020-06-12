@@ -33,7 +33,7 @@ class EditDialog extends StatelessWidget {
         children: <Widget>[
           card('추가', () {
             // ToDo : add Navigor
-          }),
+          },context),
           SizedBox(
             height: 10.0,
           ),
@@ -44,7 +44,7 @@ class EditDialog extends StatelessWidget {
                 duration: Toast.LENGTH_SHORT,
                 gravity: Toast.BOTTOM
             );
-          }),
+          }, context),
           SizedBox(
             height: 10.0,
           ),
@@ -55,7 +55,7 @@ class EditDialog extends StatelessWidget {
               duration: Toast.LENGTH_SHORT,
               gravity: Toast.BOTTOM
             );
-          }),
+          }, context),
           SizedBox(
             height: 10.0,
           ),
@@ -64,10 +64,11 @@ class EditDialog extends StatelessWidget {
     );
   }
 
-  Widget card(String title, Function function) {
+  Widget card(String title, Function function, BuildContext context) {
     return InkWell(
       onTap: () {
         function();
+        Navigator.of(context).pop();
       },
       child: Container(
         padding: EdgeInsets.only(

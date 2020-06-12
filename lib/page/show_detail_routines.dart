@@ -99,11 +99,9 @@ class _DetailRoutineState extends State<DetailRoutine> {
           ),
           actions: <Widget>[
             IconButton(
-              icon: isMenu ? menuIcon : cancelIcon,
-              // ToDo : Add onPressed
+              icon: menuIcon,
               onPressed: () {
                 setState(() {
-                  isMenu = !isMenu;
                   showGeneralDialog(
                     barrierColor: Colors.black.withOpacity(0.5),
                     transitionBuilder: (context, a1, a2, widget) {
@@ -142,15 +140,15 @@ class _DetailRoutineState extends State<DetailRoutine> {
                   Expanded(
                     child: ListView(
                       children: <Widget>[
-                        detailItem('책 읽기', 5),
+                        detailItem('책 읽기', 5, true),
                         SizedBox(
                           height: 10.0,
                         ),
-                        detailItem('책 읽기', 1),
+                        detailItem('책 읽기', 1, false),
                         SizedBox(
                           height: 10.0,
                         ),
-                        detailItem('책 읽기', 30),
+                        detailItem('책 읽기', 30, false),
                         SizedBox(
                           height: 10.0,
                         ),
@@ -166,7 +164,30 @@ class _DetailRoutineState extends State<DetailRoutine> {
     );
   }
 
-  Widget detailItem(String title, int time) {
+  /**
+   * 인자 중 isFinish 로 완료 햇는지 안했는지 결정
+   */
+  Widget detailItem(String title, int time, bool isFinish) {
+    var titleText;
+    if (isFinish) {
+      titleText = Text(
+          title,
+          style: TextStyle(
+              fontFamily: 'malgunBold',
+              fontSize: 17.0,
+              decoration: TextDecoration.lineThrough,
+              color: Colors.white,
+          )
+      );
+    } else {
+      titleText = Text(
+          title,
+          style: TextStyle(
+              fontFamily: 'malgunBold',
+              fontSize: 17.0,
+          )
+      );
+    }
     return Material(
 //      shape: RoundedRectangleBorder(
 //          borderRadius: BorderRadius.circular(15.0),
@@ -178,14 +199,35 @@ class _DetailRoutineState extends State<DetailRoutine> {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            Navigator.of(context).push(new MaterialPageRoute(
-                builder: (BuildContext context) =>
-                    new StartRoutine(title: title, timeOut: time)));
+            if (isFinish) {
+               showDialog(
+                 context: context,
+                 barrierDismissible: false,
+                 builder: (BuildContext context) {
+                   return AlertDialog(
+                     title: Text('알림'),
+                     content: Text('이미 완료한 루틴입니다.'),
+                     actions: [
+                       FlatButton(
+                         child: Text('확인'),
+                         onPressed: () {
+                           Navigator.of(context).pop();
+                         },
+                       )
+                     ],
+                   );
+                 }
+               );
+            } else {
+              Navigator.of(context).push(new MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                  new StartRoutine(title: title, timeOut: time)));
+            }
           },
           child: Container(
             padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
             decoration: new BoxDecoration(
-                color: Colors.white,
+                color: isFinish ? Colors.black : Colors.white,
                 borderRadius: BorderRadius.circular(15.0),
                 border: Border.all(
                   color: Colors.black,
@@ -201,16 +243,13 @@ class _DetailRoutineState extends State<DetailRoutine> {
                   children: <Widget>[
                     Icon(
                       Icons.book,
+                      color: isFinish ? Colors.white : Colors.black,
                       size: 35.0,
                     ),
                     SizedBox(
                       width: 10.0,
                     ),
-                    Text(
-                      title,
-                      style:
-                          TextStyle(fontFamily: 'malgunBold', fontSize: 17.0),
-                    ),
+                    titleText,
                     SizedBox(
                       width: 5.0,
                     ),
@@ -220,11 +259,13 @@ class _DetailRoutineState extends State<DetailRoutine> {
                   children: <Widget>[
                     Icon(
                       Icons.timer,
+                      color: isFinish ? Colors.white : Colors.black,
                     ),
                     Text(
                       time.toString() + 'min',
                       style: TextStyle(
                         fontFamily: 'malgunBold',
+                        color: isFinish ? Colors.white : Colors.black,
                       ),
                     ),
                   ],

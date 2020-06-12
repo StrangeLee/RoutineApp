@@ -53,7 +53,10 @@ class _ShowRoutinesState extends State<ShowRoutines> {
     }
 
     return WillPopScope(
-      onWillPop: () async => true,
+      onWillPop: () {
+        print('abcdef');
+        return exitDialog();
+      },
       child: Scaffold(
         bottomNavigationBar: BottomNavigationBar(
           showUnselectedLabels: false,
