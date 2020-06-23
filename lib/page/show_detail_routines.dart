@@ -221,7 +221,8 @@ class _DetailRoutineState extends State<DetailRoutine> {
             } else {
               Navigator.of(context).push(new MaterialPageRoute(
                   builder: (BuildContext context) =>
-                  new StartRoutine(title: title, timeOut: time)));
+                  new StartRoutine(title: title, timeOut: time))
+              );
             }
           },
           child: Container(

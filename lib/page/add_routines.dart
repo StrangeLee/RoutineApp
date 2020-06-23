@@ -1,10 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_text/gradient_text.dart';
+import 'package:intl/intl.dart';
+import 'package:routineapp/firebase/firebase_crud.dart';
 import 'package:routineapp/main.dart';
 import '../widget/day_box.dart';
 import 'show_routines.dart';
+
+crudMedthods crudObj = new crudMedthods();
 
 class AddPage extends StatefulWidget {
   @override
@@ -19,6 +25,17 @@ class _AddPageState extends State<AddPage> {
 
   TimeOfDay _picked; // user selected time value;
 
+  String selectedDays = ""; // daybox 의 clicked 가 true인 요일를 담은 변수
+
+  List<DayButton> dayButtons = new List<DayButton>();
+  List<String> days = List.unmodifiable(['일', '월', '화', '수', '목', '금', '토']);
+
+  var testBtn = DayButton(
+    day: '월',
+    clicked: true,
+  );
+
+  // time dialog
   Future<Null> selectTime(BuildContext context) async {
     _picked = await showTimePicker(
       context: context,
@@ -30,7 +47,6 @@ class _AddPageState extends State<AddPage> {
 
     setState(() {
       if (_picked != null) {
-        print(_picked);
         _alarmTime = localizations.formatTimeOfDay(_picked) + ' >';
       }
     });
@@ -39,6 +55,14 @@ class _AddPageState extends State<AddPage> {
   @override
   void initState() {
     _routineNameCtr = TextEditingController();
+    days.forEach((element) { // DayButton 객체 생성 (일~월 까지)
+      dayButtons.add(
+        new DayButton(
+          day: element,
+          clicked: true,
+        )
+      );
+    });
     super.initState();
   }
 
@@ -143,15 +167,7 @@ class _AddPageState extends State<AddPage> {
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
-                          children: <Widget>[
-                            DayButton(day: '일'),
-                            DayButton(day: '월'),
-                            DayButton(day: '화'),
-                            DayButton(day: '수'),
-                            DayButton(day: '목'),
-                            DayButton(day: '금'),
-                            DayButton(day: '토'),
-                          ],
+                          children: dayButtons,
                         ),
                       ),
                       SizedBox(
@@ -256,6 +272,7 @@ class _AddPageState extends State<AddPage> {
     );
   }
 
+  // null exception 일때 뛰우는 dialog
   Future<void> noticeDialog() async {
     return showDialog<void>(
       context: context,
@@ -284,6 +301,7 @@ class _AddPageState extends State<AddPage> {
     );
   }
 
+  // 데이터 추가 확인 dialog
   Future<void> saveDialog() async {
     return showDialog<void>(
       context: context,
@@ -302,8 +320,22 @@ class _AddPageState extends State<AddPage> {
             FlatButton(
               child: Text('확인'),
               onPressed: () {
-                debugPrint('routineName is ' + _routineNameCtr.text);
-                debugPrint('Selected TIme  is $_picked');
+                 dayButtons.forEach((element) { // 요일 체크
+                  if (element.clicked == true) {
+                    setState(() {
+                      selectedDays += "${element.day.toString()}, ";
+                    });
+                  }
+                });
+                setState(() {
+                  selectedDays = selectedDays.substring(0, selectedDays.length - 2);
+                });
+
+                _addRoutines( // firebase db 에 data 추가
+                  _routineNameCtr.text,
+                  DateFormat('HH:mm').format(DateTime(2002, 04, 17, _picked.hour, _picked.minute)),
+                  selectedDays
+                );
 
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => ShowRoutines(
@@ -326,5 +358,16 @@ class _AddPageState extends State<AddPage> {
     } else {
       saveDialog();
     }
+  }
+
+// firebase 로 데이터 전송
+  void _addRoutines(String title, String times, String days) {
+    crudObj.addData({
+      "title" : title,
+      "time" : times,
+      "days" : days,
+      "details" : {
+      }
+    }).then((value) => print("success add data"));
   }
 }
