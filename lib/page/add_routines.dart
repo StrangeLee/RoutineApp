@@ -10,7 +10,7 @@ import 'package:routineapp/main.dart';
 import '../widget/day_box.dart';
 import 'show_routines.dart';
 
-crudMedthods crudObj = new crudMedthods();
+CrudMethods crudObj = new CrudMethods();
 
 class AddPage extends StatefulWidget {
   @override
@@ -207,8 +207,7 @@ class _AddPageState extends State<AddPage> {
                         child: RaisedButton(
                           onPressed: () {
                             Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) => ShowRoutines()));
+                                MaterialPageRoute(builder: (context) => ShowRoutines()));
                           },
                           elevation: 5.0,
                           color: Colors.white,
@@ -338,9 +337,7 @@ class _AddPageState extends State<AddPage> {
                 );
 
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => ShowRoutines(
-                    alarmTime: _picked.toString(),
-                  ),
+                  builder: (context) => ShowRoutines(),
                 ));
               },
             ),

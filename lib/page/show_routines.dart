@@ -1,57 +1,47 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:routineapp/data/routine.dart';
+import 'package:routineapp/firebase/firebase_crud.dart';
 import 'file:///C:/Programing/Flutter/routine_app/lib/page/show_detail_routines.dart';
 import 'package:routineapp/main.dart';
 
 class ShowRoutines extends StatefulWidget {
-  // TODO : 생성자 추가
-  final String routineName;
-  final bool setAlarm;
-  final String alarmTime;
-  final List<bool> dayList;
-
-  ShowRoutines(
-      {@required this.routineName,
-      @required this.setAlarm,
-      @required this.alarmTime,
-      @required this.dayList});
-
   @override
-  _ShowRoutinesState createState() =>
-      _ShowRoutinesState(routineName, setAlarm, alarmTime, dayList);
+  _ShowRoutinesState createState() => _ShowRoutinesState();
 }
 
 class _ShowRoutinesState extends State<ShowRoutines> {
   var now = new DateTime.now();
 
-  // constructor parameter
-  String routineName;
-  bool setAlarm;
-  String alarmTime;
-  List<bool> dayList;
-
-  _ShowRoutinesState(
-      this.routineName, this.setAlarm, this.alarmTime, this.dayList);
-
   int _navyIndex = 0; // bottomNavigation Index
+
+  CrudMethods crudObj = new CrudMethods();
+  var streamList; // CrudMethods.getData() 에서 받아온 Stream<QuerySnapshot> 을 담는 리스트
+  List<Routine> routineList = new List<Routine>();
+
+  @override
+  void initState() {
+    crudObj.getData().then((results) {
+      setState(() {
+        streamList = results;
+      });
+    });
+//    routineList = crudObj.getData().documents.map((e) => Routine(
+//      times: e.data['time'],
+//      details: e.data['details'],
+//      title: e.data['title'],
+//      days: e.data['days'],
+//    )).toList();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (routineName != null) {
-      String days = '';
-      for (int i = 0; i < dayList.length; i++) {
-        if (dayList[i] == true) {
-          days += getDay(i) + ' ';
-        }
-        days.trim();
-      }
-      debugPrint(
-          'name = $routineName, Alarm is $setAlarm on $alarmTime every ');
-    }
-
     return WillPopScope(
       onWillPop: () {
         print('abcdef');
@@ -117,22 +107,23 @@ class _ShowRoutinesState extends State<ShowRoutines> {
                   ],
                 ),
                 Container(
-                    alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                    child: TyperAnimatedTextKit(
-                      text: ['오늘 하루는 어땠나요?'],
-                      textStyle: TextStyle(
-                        fontSize: 25.0,
-                        fontFamily: 'LemonMilkMedium',
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.start,
-                      alignment: AlignmentDirectional.topStart,
-                      isRepeatingAnimation: false,
-                      speed: new Duration(
-                        milliseconds: 200,
-                      ),
-                    )),
+                  alignment: Alignment.centerLeft,
+                  padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                  child: TyperAnimatedTextKit(
+                    text: ['오늘 하루는 어땠나요?'],
+                    textStyle: TextStyle(
+                      fontSize: 25.0,
+                      fontFamily: 'LemonMilkMedium',
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.start,
+                    alignment: AlignmentDirectional.topStart,
+                    isRepeatingAnimation: false,
+                    speed: new Duration(
+                      milliseconds: 200,
+                    ),
+                  )
+                ),
                 Divider(
                   height: 5.0, // 위 아래 합친 60
                   color: Colors.grey[850],
@@ -142,24 +133,86 @@ class _ShowRoutinesState extends State<ShowRoutines> {
                 ),
                 Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
                 Expanded(
-                  // 왜 Expanded 로 감싸지?
-                    child: ListView(
-                      children: <Widget>[
-                        routineItem('Morning Routine', '월, 화, 수, 목, 금', '7:00'),
-                        routineItem('Lunch Routine', '월, 화, 수, 목, 금', '12:00'),
-                        routineItem(
-                            'Night Routine', '일, 월, 화, 수, 목, 금, 토', '21:00'),
-                        routineItem('Night 1', '일, 월, 화, 수, 목, 금, 토', '21:00'),
-                        routineItem(
-                            'Night Ro2utine', '일, 월, 화, 수, 목, 금, 토', '21:00'),
-                        routineItem(
-                            'Night Rout3ine', '일, 월, 화, 수, 목, 금, 토', '21:00'),
-                        routineItem(
-                            'Night Rout6ine', '일, 월, 화, 수, 목, 금, 토', '21:00'),
-                        routineItem(
-                            'Night Rout4ine', '일, 월, 화, 수, 목, 금, 토', '21:00'),
-                      ],
-                    ))
+//                  child: ListView.builder(
+//                    itemCount: routineList.length,
+//                    itemBuilder: (context, i) {
+//                      return routineItem(
+//                        routineList[i].title,
+//                        routineList[i].days,
+//                        routineList[i].times,
+//                        i
+//                      );
+//                    }
+//                  ),
+                  child: StreamBuilder(
+                    stream: streamList,
+                    builder: (context, snapshot) {
+                      if (snapshot.data != null) {
+                        return ListView.builder(
+                          itemCount: snapshot.data.documents.length,
+                          itemBuilder: (context, i) { // 2020/06/25 TODO : deails를 빼낼 알고리즘 생각하기 item builder 의 for문 때문에 데이터가 많으 면 시간이 오래걸림...
+                              final dynamic details = snapshot.data.documents[i]['details'];
+                              List<String> column = List.unmodifiable(['name:', 'finished:', 'time:']);
+                              var str = details.toString().split('}, {');
+                              List<Details> detailList = List<Details>();
+
+                              // details 구하기
+                              for (int j = 0; j < str.length; j++) {
+                                var str2 = str[j].split(', ');
+                                for (int i = 0; i < str2.length; i++){
+                                  if (str2[i] != '{}') { // null 값 체크
+                                    Details detailData = new Details();
+                                    if (j == 0) { // List 끝과 끝의 [{}] 없애주기
+                                      switch (i) {
+                                        case 0:
+                                          detailData.name = str2[i].substring(8);
+                                          break;
+                                        case 1:
+                                          detailData.checked = getBool(str2[i].substring(10));
+                                          break;
+                                        case 2:
+                                          detailData.time = int.parse(str2[i].substring(6));
+                                      }
+                                    } else if (j == str.length - 1) { // List 끝과 끝의 [{}] 없애주기
+                                      switch (i) {
+                                        case 0:
+                                          detailData.name = str2[i].substring(6);
+                                          break;
+                                        case 1:
+                                          detailData.checked = getBool(str2[i].substring(10));
+                                          break;
+                                        case 2:
+                                          detailData.time = int.parse(str2[i].replaceAll('}]', '').substring(6));
+//                                          print(str2[i].replaceAll('}]', ''));
+                                      }
+                                    }
+                                    detailList.add(detailData);
+                                  }
+                                }
+                              }
+                              str.forEach((detail) {
+                              });
+
+                            routineList.add(new Routine( // routine list 에 firebase 에서 받아온 정보 저장
+                              title: snapshot.data.documents[i].data['title'],
+                              days: snapshot.data.documents[i].data['days'],
+                              times: snapshot.data.documents[i].data['time'],
+                              details: null,
+                            ));
+                            return routineItem(
+                              snapshot.data.documents[i].data['title'],
+                              snapshot.data.documents[i].data['days'],
+                              snapshot.data.documents[i].data['time'],
+                              i
+                            );
+                          }
+                        );
+                      } else {
+                        return CircularProgressIndicator(); // loading progress
+                      }
+                    }
+                  ),
+                ),
               ],
             ),
           ),
@@ -169,7 +222,7 @@ class _ShowRoutinesState extends State<ShowRoutines> {
   }
 
   // ListView Item
-  Widget routineItem(String title, String days, String time) {
+  Widget routineItem(String title, String days, String time, int position) {
     return Padding(
       padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
       child: Container(
@@ -219,8 +272,8 @@ class _ShowRoutinesState extends State<ShowRoutines> {
               onPressed: () {
                 print('Head Routine Item is $title');
                 Navigator.of(context).push(new MaterialPageRoute(
-                  builder: (BuildContext context) => new DetailRoutine(
-                    routineName: title, alarmTime: time, dayList: days)));
+                  builder: (BuildContext context) => new DetailRoutine(routine: streamList[position],)
+                ));
               },
               alignment: Alignment.centerRight,
             )
@@ -259,6 +312,7 @@ class _ShowRoutinesState extends State<ShowRoutines> {
     }
   }
 
+  // navigation 이벤트
   void navigationStuff(int index) {
     print('now index = $index');
     switch (index) {
@@ -269,6 +323,15 @@ class _ShowRoutinesState extends State<ShowRoutines> {
         break;
       case 2:
         break;
+    }
+  }
+
+  // true, false 반환
+  bool getBool(String str) {
+    if (str == 'true') {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -300,3 +363,5 @@ class _ShowRoutinesState extends State<ShowRoutines> {
     );
   }
 }
+
+

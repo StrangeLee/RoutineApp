@@ -4,29 +4,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gradient_text/gradient_text.dart';
+import 'package:routineapp/data/routine.dart';
 import '../main.dart';
 import 'file:///C:/Programing/Flutter/routine_app/lib/page/startRoutine.dart';
 import 'package:routineapp/widget/edit_pop_dialog.dart';
 
 class DetailRoutine extends StatefulWidget {
-  final String routineName;
-  final String alarmTime;
-  final String dayList;
+  Routine routine;
 
-  DetailRoutine(
-      {@required this.routineName,
-      @required this.alarmTime,
-      @required this.dayList});
+  DetailRoutine({this.routine});
 
   @override
   _DetailRoutineState createState() =>
-      _DetailRoutineState(routineName, alarmTime, dayList);
+      _DetailRoutineState(routine);
 }
 
 class _DetailRoutineState extends State<DetailRoutine> {
-  String routineName;
-  String alarmTime;
-  String dayList;
+  Routine routine;
 
   // menu icon 세팅
   bool isMenu = true;
@@ -39,14 +33,16 @@ class _DetailRoutineState extends State<DetailRoutine> {
     color: Colors.black,
   );
 
-  _DetailRoutineState(this.routineName, this.alarmTime, this.dayList);
+  _DetailRoutineState(this.routine);
 
   int _navyIndex = 0;
 
   @override
   void initState() {
+    routine.details.forEach((element) {
+      print(element.name + ', ${element.time}');
+    });
     super.initState();
-    print('title = $routineName');
   }
 
   @override
@@ -88,7 +84,7 @@ class _DetailRoutineState extends State<DetailRoutine> {
           elevation: 0.0,
           automaticallyImplyLeading: false,
           title: GradientText(
-            routineName,
+            routine.title,
             gradient: LinearGradient(
                 colors: [MyApp.colorDeepBlue, MyApp.colorLightBlue]),
             style: TextStyle(

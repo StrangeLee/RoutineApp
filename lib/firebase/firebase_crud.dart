@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:routineapp/data/routine.dart';
 
-class crudMedthods {
+class CrudMethods {
 
-  Future<void> addData(carData) async {
-    Firestore.instance.collection('routine').add(carData).catchError((e) {
+  Future<void> addData(routineData) async {
+    Firestore.instance.collection('routine').add(routineData).catchError((e) {
       print(e);
     });
   }
