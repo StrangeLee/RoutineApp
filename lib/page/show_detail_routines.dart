@@ -4,23 +4,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gradient_text/gradient_text.dart';
-import 'package:routineapp/data/routine.dart';
 import '../main.dart';
 import 'file:///C:/Programing/Flutter/routine_app/lib/page/startRoutine.dart';
 import 'package:routineapp/widget/edit_pop_dialog.dart';
 
+// ignore: must_be_immutable
 class DetailRoutine extends StatefulWidget {
-  Routine routine;
+  List<dynamic> details;
 
-  DetailRoutine({this.routine});
+  DetailRoutine({this.details});
 
   @override
   _DetailRoutineState createState() =>
-      _DetailRoutineState(routine);
+      _DetailRoutineState(details);
 }
 
 class _DetailRoutineState extends State<DetailRoutine> {
-  Routine routine;
+  List<dynamic> details;
 
   // menu icon 세팅
   bool isMenu = true;
@@ -33,14 +33,14 @@ class _DetailRoutineState extends State<DetailRoutine> {
     color: Colors.black,
   );
 
-  _DetailRoutineState(this.routine);
+  _DetailRoutineState(this.details);
 
   int _navyIndex = 0;
 
   @override
   void initState() {
-    routine.details.forEach((element) {
-      print(element.name + ', ${element.time}');
+    details.forEach((element) {
+      print(element[0]["name"]);
     });
     super.initState();
   }
@@ -84,7 +84,8 @@ class _DetailRoutineState extends State<DetailRoutine> {
           elevation: 0.0,
           automaticallyImplyLeading: false,
           title: GradientText(
-            routine.title,
+//            details[0]["name"],
+            details[0].toString(),
             gradient: LinearGradient(
                 colors: [MyApp.colorDeepBlue, MyApp.colorLightBlue]),
             style: TextStyle(
@@ -133,24 +134,30 @@ class _DetailRoutineState extends State<DetailRoutine> {
               padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
               child: Column(
                 children: <Widget>[
-                  Expanded(
-                    child: ListView(
-                      children: <Widget>[
-                        detailItem('책 읽기', 5, true),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        detailItem('책 읽기', 1, false),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        detailItem('책 읽기', 30, false),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                      ],
-                    ),
-                  )
+                  if (details == null) ...{
+                    Text('abc')
+                  } else ...{
+                    Expanded(
+                      child: ListView(
+                        children: <Widget>[
+                          detailItem(
+                              '책 읽기', 1, false
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          detailItem('책 읽기', 1, false),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          detailItem('책 읽기', 30, false),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                        ],
+                      ),
+                    )
+                  }
                 ],
               ),
             ),

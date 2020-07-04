@@ -10,6 +10,7 @@ import 'package:routineapp/firebase/firebase_crud.dart';
 import 'file:///C:/Programing/Flutter/routine_app/lib/page/show_detail_routines.dart';
 import 'package:routineapp/main.dart';
 
+// 2020/07/03 Todo : List<dynamic> to List<Routines> 변환 방법 찾기
 class ShowRoutines extends StatefulWidget {
   @override
   _ShowRoutinesState createState() => _ShowRoutinesState();
@@ -23,6 +24,8 @@ class _ShowRoutinesState extends State<ShowRoutines> {
   CrudMethods crudObj = new CrudMethods();
   var streamList; // CrudMethods.getData() 에서 받아온 Stream<QuerySnapshot> 을 담는 리스트
   List<Routine> routineList = new List<Routine>();
+
+  List<dynamic> details = List<dynamic>();
 
   @override
   void initState() {
@@ -150,55 +153,12 @@ class _ShowRoutinesState extends State<ShowRoutines> {
                       if (snapshot.data != null) {
                         return ListView.builder(
                           itemCount: snapshot.data.documents.length,
-                          itemBuilder: (context, i) { // 2020/06/25 TODO : deails를 빼낼 알고리즘 생각하기 item builder 의 for문 때문에 데이터가 많으 면 시간이 오래걸림...
-                              final dynamic details = snapshot.data.documents[i]['details'];
-                              List<String> column = List.unmodifiable(['name:', 'finished:', 'time:']);
-                              var str = details.toString().split('}, {');
-                              List<Details> detailList = List<Details>();
+                          itemBuilder: (context, i) { // 2020/06/25 TODO : deails를 빼낼 알고리즘 생각하기 item builder 의 for문 때문에 데이터가 많으 면 시간이 오래걸림... -> 해결함(2020/06/26) -> 못함
+                            details.add(snapshot.data.documents[i]['details']);
+//                            print(snapshot.data.documents[i]['details'][0]["name"]);
+//                            print(snapshot.data.documents[i]['details'].length);
+//                            print(snapshot.data.documents[i].data['title'] + " " + details.toString());
 
-                              // details 구하기
-                              for (int j = 0; j < str.length; j++) {
-                                var str2 = str[j].split(', ');
-                                for (int i = 0; i < str2.length; i++){
-                                  if (str2[i] != '{}') { // null 값 체크
-                                    Details detailData = new Details();
-                                    if (j == 0) { // List 끝과 끝의 [{}] 없애주기
-                                      switch (i) {
-                                        case 0:
-                                          detailData.name = str2[i].substring(8);
-                                          break;
-                                        case 1:
-                                          detailData.checked = getBool(str2[i].substring(10));
-                                          break;
-                                        case 2:
-                                          detailData.time = int.parse(str2[i].substring(6));
-                                      }
-                                    } else if (j == str.length - 1) { // List 끝과 끝의 [{}] 없애주기
-                                      switch (i) {
-                                        case 0:
-                                          detailData.name = str2[i].substring(6);
-                                          break;
-                                        case 1:
-                                          detailData.checked = getBool(str2[i].substring(10));
-                                          break;
-                                        case 2:
-                                          detailData.time = int.parse(str2[i].replaceAll('}]', '').substring(6));
-//                                          print(str2[i].replaceAll('}]', ''));
-                                      }
-                                    }
-                                    detailList.add(detailData);
-                                  }
-                                }
-                              }
-                              str.forEach((detail) {
-                              });
-
-                            routineList.add(new Routine( // routine list 에 firebase 에서 받아온 정보 저장
-                              title: snapshot.data.documents[i].data['title'],
-                              days: snapshot.data.documents[i].data['days'],
-                              times: snapshot.data.documents[i].data['time'],
-                              details: null,
-                            ));
                             return routineItem(
                               snapshot.data.documents[i].data['title'],
                               snapshot.data.documents[i].data['days'],
@@ -208,7 +168,9 @@ class _ShowRoutinesState extends State<ShowRoutines> {
                           }
                         );
                       } else {
-                        return CircularProgressIndicator(); // loading progress
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        ); // loading progress
                       }
                     }
                   ),
@@ -272,7 +234,9 @@ class _ShowRoutinesState extends State<ShowRoutines> {
               onPressed: () {
                 print('Head Routine Item is $title');
                 Navigator.of(context).push(new MaterialPageRoute(
-                  builder: (BuildContext context) => new DetailRoutine(routine: streamList[position],)
+                  builder: (BuildContext context) {
+                    return new DetailRoutine(details: details);
+                  }
                 ));
               },
               alignment: Alignment.centerRight,
